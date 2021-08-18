@@ -10,11 +10,7 @@ class App extends React.Component {
       form: {
         title: undefined,
       },
-      tasks: [
-        {
-          title: "Lavar platos y recoger toda la casa",
-        },
-      ],
+      tasks: [],
     };
   }
 
