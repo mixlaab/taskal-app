@@ -1,18 +1,23 @@
 import React from "react";
 import "./Task.styles.scss";
 
-const Task = ({ title }) => {
+const Task = ({ id, title, isCompleted, handleRemove, handleCheck }) => {
   return (
     <div className={"task"}>
       <div className={"task-main"}>
-        <input className={"task-cb"} type="checkbox" />
+        <input
+          onChange={() => handleCheck(id)}
+          className={"task-cb"}
+          type="checkbox"
+          checked={isCompleted}
+        />
         <label className={"task-title"}>{title}</label>
       </div>
 
       <div className={"task-buttons"}>
         <div className="delete icon">
           <div className="tooltip">Delete</div>
-          <span>
+          <span onClick={() => handleRemove(id)}>
             <i className="fa fa-trash"></i>
           </span>
         </div>
