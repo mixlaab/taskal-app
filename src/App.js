@@ -9,48 +9,76 @@ class App extends React.Component {
     this.state = {
       form: {
         title: undefined,
-        id: 0,
       },
       tasks: [],
     };
   }
 
+  componentDidMount() {
+    this.setState({ loading: true });
+    fetch("http://localhost:4040/api/tasks/")
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          tasks: data,
+        });
+      });
+  }
+
   handleChange = (e) => {
-    this.setState((prevState) => ({
+    this.setState(() => ({
       form: {
         title: e.target.value,
-        id: prevState.form.id,
       },
     }));
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    let { form, tasks } = this.state;
-    form["isCompleted"] = false;
-    tasks.push(form);
-    this.setState((prevState) => ({
-      form: { title: undefined, id: prevState.form.id + 1 },
-      tasks: tasks,
-    }));
-  };
-
-  handleRemove = (id) => {
-    let { tasks } = this.state;
-    let newTasks = tasks.filter((el) => el.id !== id);
-    this.setState({
-      tasks: newTasks,
+    await fetch("http://localhost:4040/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: this.state.form.title }),
     });
+
+    await fetch("http://localhost:4040/api/tasks/")
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          form: { title: undefined },
+          tasks: data,
+        });
+      });
   };
 
-  handleCheck = (id) => {
-    let { tasks } = this.state;
-    const newTasks = tasks.map((item) =>
-      item.id === id
-        ? { title: item.title, id: item.id, isCompleted: !item.isCompleted }
-        : { title: item.title, id: item.id, isCompleted: item.isCompleted }
-    );
-    this.setState({ tasks: newTasks });
+  handleRemove = async (id) => {
+    await fetch(`http://localhost:4040/api/tasks/${id}`, {
+      method: "DELETE",
+    });
+
+    await fetch("http://localhost:4040/api/tasks/")
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          form: { title: undefined },
+          tasks: data,
+        });
+      });
+  };
+
+  handleCheck = async (id) => {
+    await fetch(`http://localhost:4040/api/tasks/${id}/changestatus`, {
+      method: "PUT",
+    });
+
+    await fetch("http://localhost:4040/api/tasks/")
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          form: { title: undefined },
+          tasks: data,
+        });
+      });
   };
 
   render() {
