@@ -85,7 +85,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1>Taskal</h1>
+          <h1>Taskal: A To-Do App for Everyone</h1>
           <FormInput
             value={this.state.form.title}
             handleChange={this.handleChange}
